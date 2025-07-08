@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASH Focus Training / 亚亚专注力训练</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            padding-top: 80px; /* 增加顶部内边距为语言按钮留出空间 */
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 30px;
+            color: #5a67d8;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .language-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10; /* 确保按钮在最上层 */
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: 2px solid #5a67d8;
+            background: white;
+            color: #5a67d8;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: #5a67d8;
+            color: white;
+        }
+
+        .lang-btn.active {
+            background: #5a67d8;
+            color: white;
+        }
+
+        /* 移动设备优化 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+                padding-top: 70px; /* 移动设备上的顶部内边距 */
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 2em; /* 减小标题字体大小 */
+                margin-bottom: 20px;
+            }
+            
+            .language-switch {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+            }
+            
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em; /* 更小屏幕上进一步减小 */
+            }
+            
+            .container {
+                padding-top: 60px;
+            }
+        }
+
+        .display-area {
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 120px;
+            font-weight: bold;
+            background: #f7fafc;
+            border-radius: 20px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 480px) {
+            .display-area {
+                width: 250px;
+                height: 250px;
+                font-size: 100px;
+            }
+        }
+
+        .symbol-o {
+            color: #48bb78;
+        }
+
+        .symbol-x {
+            color: #e53e3e;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            font-weight: 600;
+        }
+
+        .btn-start {
+            background: #5a67d8;
+            color: white;
+        }
+
+        .btn-start:hover {
+            background: #4c51bf;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(90, 103, 216, 0.3);
+        }
+
+        .btn-press {
+            background: #48bb78;
+            color: white;
+            font-size: 24px;
+            padding: 20px 60px;
+        }
+
+        .btn-press:hover {
+            background: #38a169;
+        }
+
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+
+        .btn-press:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 480px) {
+            .btn {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+            
+            .btn-press {
+                font-size: 20px;
+                padding: 15px 40px;
+            }
+        }
+
+        .stats {
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            background: #f7fafc;
+            padding: 15px 25px;
+            border-radius: 10px;
+            min-width: 150px;
+        }
+
+        @media (max-width: 480px) {
+            .stat-item {
+                min-width: 120px;
+                padding: 10px 20px;
+            }
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        @media (max-width: 480px) {
+            .stat-value {
+                font-size: 20px;
+            }
+        }
+
+        .instructions {
+            background: #edf2f7;
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            line-height: 1.8;
+            font-size: 17px;
+            color: #2d3748;
+        }
+
+        .instructions p {
+            margin: 10px 0;
+        }
+
+        .instructions p:first-child {
+            font-size: 18px;
+            color: #5a67d8;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .instructions strong {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 480px) {
+            .instructions {
+                padding: 20px;
+                font-size: 15px;
+            }
+            
+            .instructions p:first-child {
+                font-size: 16px;
+            }
+            
+            .instructions strong {
+                font-size: 18px;
+            }
+        }
+
+        .duration-selector {
+            margin: 30px 0;
+        }
+
+        .duration-title {
+            font-size: 18px;
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        .duration-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .duration-btn {
+            padding: 12px 30px;
+            border: 2px solid #5a67d8;
+            background: white;
+            color: #5a67d8;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .duration-btn:hover {
+            background: #f7fafc;
+            transform: translateY(-2px);
+        }
+
+        .duration-btn.selected {
+            background: #5a67d8;
+            color: white;
+        }
+
+        @media (max-width: 480px) {
+            .duration-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f0fff4;
+            border-radius: 10px;
+            border: 2px solid #48bb78;
+        }
+
+        .result h2 {
+            color: #48bb78;
+            margin-bottom: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 1000;
+            animation: fadeInOut 0.8s ease;
+        }
+
+        .feedback.correct {
+            background: #48bb78;
+            color: white;
+        }
+
+        .countdown {
+            font-size: 120px;
+            font-weight: bold;
+            color: #5a67d8;
+            margin: 50px 0;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @media (max-width: 480px) {
+            .countdown {
+                font-size: 80px;
+                margin: 30px 0;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .ready-text {
+            font-size: 24px;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .ready-text {
+                font-size: 20px;
+            }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-switch">
+            <button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
+            <button class="lang-btn" onclick="switchLanguage('en')">English</button>
+        </div>
+
+        <h1 id="title">亚亚专注力训练</h1>
+        
+        <div id="welcome-screen">
+            <div class="instructions" id="instructions">
+                <p>这个训练可以帮助您提高专注力和反应能力。</p>
+                <p>屏幕上会随机显示字母 <span style="color: #48bb78; font-weight: bold;">O</span> 或 <span style="color: #e53e3e; font-weight: bold;">X</span></p>
+                <p>当您看到 <strong style="color: #e53e3e;">X</strong> 时，请立即按下"按键"按钮。</p>
+                <p style="margin-top: 20px; font-size: 16px; color: #718096;">💡 小贴士：保持放松，将注意力集中在屏幕中央，让反应自然而然地发生。</p>
+            </div>
+            
+            <div class="duration-selector">
+                <div class="duration-title" id="duration-title">选择测试时长</div>
+                <div class="duration-options">
+                    <button class="duration-btn" onclick="selectDuration(3)" data-duration="3">3分钟</button>
+                    <button class="duration-btn selected" onclick="selectDuration(5)" data-duration="5">5分钟</button>
+                    <button class="duration-btn" onclick="selectDuration(10)" data-duration="10">10分钟</button>
+                </div>
+            </div>
+            
+            <button class="btn btn-start" onclick="startTest()" id="start-btn">开始测试</button>
+        </div>
+
+        <div id="test-screen" class="hidden">
+            <div id="countdown-screen" class="hidden">
+                <div class="ready-text" id="ready-text">准备开始...</div>
+                <div class="countdown" id="countdown">5</div>
+            </div>
+            
+            <div id="test-content" class="hidden">
+                <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label" id="time-label">剩余时间</div>
+                    <div class="stat-value" id="timer">3:00</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label" id="score-label">专注力</div>
+                    <div class="stat-value"><span id="score">0</span>%</div>
+                </div>
+            </div>
+            
+            <div class="display-area" id="display">
+                
+            </div>
+            
+                <button class="btn btn-press" onclick="pressButton()" id="press-btn">按键 (Enter)</button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <div class="result">
+                <h2 id="result-title">测试完成！</h2>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label" id="final-score-label">专注力水平</div>
+                        <div class="stat-value"><span id="final-score">0</span>%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label" id="accuracy-label">识别准确率</div>
+                        <div class="stat-value" id="accuracy">0%</div>
+                    </div>
+                </div>
+                <p id="result-message" style="margin-top: 20px; font-size: 18px;"></p>
+                <button class="btn btn-start" onclick="resetTest()" id="restart-btn">重新开始</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 多语言文本
+        const translations = {
+            zh: {
+                title: '亚亚专注力训练',
+                instructions: `
+                    <p>这个训练可以帮助您提高专注力和反应能力。</p>
+                    <p>屏幕上会随机显示字母 <span style="color: #48bb78; font-weight: bold;">O</span> 或 <span style="color: #e53e3e; font-weight: bold;">X</span></p>
+                    <p>当您看到 <strong style="color: #e53e3e;">X</strong> 时，请立即按下"按键"按钮。</p>
+                    <p style="margin-top: 20px; font-size: 16px; color: #718096;">💡 小贴士：保持放松，将注意力集中在屏幕中央，让反应自然而然地发生。</p>
+                `,
+                durationTitle: '选择测试时长',
+                duration3: '3分钟',
+                duration5: '5分钟',
+                duration10: '10分钟',
+                startBtn: '开始测试',
+                timeLabel: '剩余时间',
+                scoreLabel: '专注力',
+                pressBtn: '按键 (Enter)',
+                resultTitle: '测试完成！',
+                finalScoreLabel: '专注力水平',
+                accuracyLabel: '识别准确率',
+                restartBtn: '重新开始',
+                excellent: '优秀！您的专注力很好！',
+                good: '不错！继续练习可以更好！',
+                needPractice: '需要更多练习来提高专注力。',
+                correct: '正确！',
+                missed: '错过了！',
+                readyText: '准备开始...'
+            },
+            en: {
+                title: 'ASH Focus Training',
+                instructions: `
+                    <p>This training helps improve your focus and reaction time.</p>
+                    <p>Letters <span style="color: #48bb78; font-weight: bold;">O</span> or <span style="color: #e53e3e; font-weight: bold;">X</span> will appear randomly on screen.</p>
+                    <p>When you see <strong style="color: #e53e3e;">X</strong>, press the button immediately.</p>
+                    <p style="margin-top: 20px; font-size: 16px; color: #718096;">💡 Tip: Stay relaxed, focus on the center of the screen, and let your reactions flow naturally.</p>
+                `,
+                durationTitle: 'Select Duration',
+                duration3: '3 minutes',
+                duration5: '5 minutes',
+                duration10: '10 minutes',
+                startBtn: 'Start Test',
+                timeLabel: 'Time Remaining',
+                scoreLabel: 'Focus Level',
+                pressBtn: 'Press (Enter)',
+                resultTitle: 'Test Complete!',
+                finalScoreLabel: 'Focus Level',
+                accuracyLabel: 'Recognition Accuracy',
+                restartBtn: 'Start Again',
+                excellent: 'Excellent! Your focus is great!',
+                good: 'Good! Keep practicing to improve!',
+                needPractice: 'Need more practice to improve focus.',
+                correct: 'Correct!',
+                missed: 'Missed!',
+                readyText: 'Get Ready...'
+            }
+        };
+
+        let currentLang = 'zh';
+        let testRunning = false;
+        let focusPercentage = 0;
+        let testDuration = 5; // 默认5分钟
+        let timeRemaining = 300; // 5分钟
+        let xAppearances = 0;
+        let currentSymbol = '';
+        let symbolStartTime = 0;
+        let canPress = false;
+        let timer = null;
+        let symbolTimer = null;
+        let xPositions = [];
+        let symbolIndex = 0;
+        let correctPresses = 0;
+        let wrongPresses = 0;
+        let missedX = 0;
+        let testStartTime = 0; // 添加测试开始时间记录
+
+        // 切换语言
+        function switchLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            updateTexts();
+        }
+
+        // 选择测试时长
+        function selectDuration(minutes) {
+            testDuration = minutes;
+            timeRemaining = minutes * 60;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.duration-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (parseInt(btn.dataset.duration) === minutes) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+
+        // 更新界面文字
+        function updateTexts() {
+            const t = translations[currentLang];
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('instructions').innerHTML = t.instructions;
+            document.getElementById('duration-title').textContent = t.durationTitle;
+            document.getElementById('start-btn').textContent = t.startBtn;
+            document.getElementById('time-label').textContent = t.timeLabel;
+            document.getElementById('score-label').textContent = t.scoreLabel;
+            document.getElementById('press-btn').textContent = t.pressBtn;
+            document.getElementById('result-title').textContent = t.resultTitle;
+            document.getElementById('final-score-label').textContent = t.finalScoreLabel;
+            document.getElementById('accuracy-label').textContent = t.accuracyLabel;
+            document.getElementById('restart-btn').textContent = t.restartBtn;
+            document.getElementById('ready-text').textContent = t.readyText;
+            
+            // 更新时长按钮文字
+            const durationBtns = document.querySelectorAll('.duration-btn');
+            durationBtns[0].textContent = t.duration3;
+            durationBtns[1].textContent = t.duration5;
+            durationBtns[2].textContent = t.duration10;
+        }
+
+        // 生成X出现的位置
+        function generateXPositions() {
+            xPositions = [];
+            const symbolDuration = 5; // 每个符号5秒（4秒显示 + 1秒间隔）
+            const totalSymbols = Math.floor((testDuration * 60) / symbolDuration);
+            
+            // 根据测试时长调整X的数量
+            let minX, maxX;
+            if (testDuration === 3) {
+                minX = 7; maxX = 9;   // 3分钟：7-9个X
+            } else if (testDuration === 5) {
+                minX = 12; maxX = 15; // 5分钟：12-15个X
+            } else {
+                minX = 25; maxX = 30; // 10分钟：25-30个X
+            }
+            
+            const xCount = minX + Math.floor(Math.random() * (maxX - minX + 1));
+            while (xPositions.length < xCount) {
+                const pos = Math.floor(Math.random() * totalSymbols);
+                if (!xPositions.includes(pos) && pos > 1) {
+                    xPositions.push(pos);
+                }
+            }
+            xPositions.sort((a, b) => a - b);
+        }
+
+        // 开始测试
+        function startTest() {
+            // 显示测试界面和倒计时
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('test-screen').classList.remove('hidden');
+            document.getElementById('countdown-screen').classList.remove('hidden');
+            document.getElementById('test-content').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            
+            // 更新倒计时文字
+            const t = translations[currentLang];
+            document.getElementById('ready-text').textContent = t.readyText;
+            
+            // 开始倒计时
+            let countdown = 5;
+            document.getElementById('countdown').textContent = countdown;
+            
+            const countdownTimer = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    document.getElementById('countdown').textContent = countdown;
+                } else {
+                    clearInterval(countdownTimer);
+                    // 隐藏倒计时，显示测试内容
+                    document.getElementById('countdown-screen').classList.add('hidden');
+                    document.getElementById('test-content').classList.remove('hidden');
+                    // 给用户1秒的准备时间
+                    setTimeout(() => {
+                        startActualTest();
+                    }, 1000);
+                }
+            }, 1000); // 标准1秒间隔
+        }
+        
+        // 开始实际测试
+        function startActualTest() {
+            testRunning = true;
+            focusPercentage = 0;
+            timeRemaining = testDuration * 60;
+            xAppearances = 0;
+            symbolIndex = 0;
+            correctPresses = 0;
+            wrongPresses = 0;
+            missedX = 0;
+            testStartTime = Date.now(); // 记录开始时间
+            
+            generateXPositions();
+            
+            updateDisplay();
+            startTimer();
+            showNextSymbol();
+        }
+
+        // 更新显示
+        function updateDisplay() {
+            document.getElementById('timer').textContent = formatTime(timeRemaining);
+            document.getElementById('score').textContent = focusPercentage;
+        }
+
+        // 格式化时间
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = seconds % 60;
+            return `${min}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        // 开始计时器
+        function startTimer() {
+            timer = setInterval(() => {
+                // 使用实际经过的时间来校准
+                if (testStartTime) {
+                    const actualElapsed = Math.floor((Date.now() - testStartTime) / 1000);
+                    const expectedRemaining = (testDuration * 60) - actualElapsed;
+                    
+                    // 如果偏差超过2秒，使用实际时间校准
+                    if (Math.abs(timeRemaining - expectedRemaining) > 2) {
+                        timeRemaining = expectedRemaining;
+                    } else {
+                        timeRemaining--;
+                    }
+                } else {
+                    timeRemaining--;
+                }
+                
+                updateDisplay();
+                
+                if (timeRemaining <= 0) {
+                    endTest();
+                }
+            }, 1000);
+        }
+
+        // 显示下一个符号
+        function showNextSymbol() {
+            if (!testRunning || timeRemaining <= 0) {
+                return;
+            }
+            
+            // 确定显示O还是X
+            const isX = xPositions.includes(symbolIndex);
+            currentSymbol = isX ? 'X' : 'O';
+            
+            if (isX) {
+                xAppearances++;
+            }
+            
+            // 显示符号
+            const display = document.getElementById('display');
+            const spanClass = isX ? 'symbol-x' : 'symbol-o';
+            display.innerHTML = '<span class="' + spanClass + '">' + currentSymbol + '</span>';
+            
+            symbolStartTime = Date.now();
+            canPress = true;
+            
+            // 4秒后清除符号
+            symbolTimer = setTimeout(() => {
+                if (currentSymbol === 'X' && canPress) {
+                    // 错过了X
+                    missedX++;
+                    showFeedback(false);
+                }
+                canPress = false;
+                display.innerHTML = '';
+                
+                // 1秒间隔后显示下一个符号
+                setTimeout(() => {
+                    symbolIndex++;
+                    if (testRunning && timeRemaining > 0) {
+                        showNextSymbol();
+                    }
+                }, 1000);
+            }, 4000);
+        }
+
+        // 按键处理
+        function pressButton() {
+            if (!canPress || !testRunning) return;
+            
+            if (currentSymbol === 'X') {
+                // 正确按下
+                correctPresses++;
+                showFeedback(true);
+                canPress = false;
+            } else {
+                // 错误按下
+                wrongPresses++;
+            }
+            
+            // 计算专注力百分比
+            calculateFocusPercentage();
+            updateDisplay();
+        }
+        
+        // 计算专注力百分比
+        function calculateFocusPercentage() {
+            // 基于正确识别的X、错过的X和错误按键来计算
+            if (xAppearances === 0 && wrongPresses === 0) {
+                focusPercentage = 100;
+            } else {
+                // 正确识别X的权重最高，错误按键会扣分
+                const correctScore = correctPresses * 100;
+                const missedPenalty = missedX * 50;
+                const wrongPressPenalty = wrongPresses * 20;
+                const totalPossible = xAppearances * 100;
+                
+                if (totalPossible > 0) {
+                    focusPercentage = Math.max(0, Math.round((correctScore - missedPenalty - wrongPressPenalty) / totalPossible * 100));
+                } else {
+                    // 如果还没有X出现，但有错误按键
+                    focusPercentage = Math.max(0, 100 - (wrongPresses * 10));
+                }
+            }
+        }
+
+        // 显示反馈
+        function showFeedback(correct) {
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback ' + (correct ? 'correct' : 'missed');
+            feedback.textContent = translations[currentLang][correct ? 'correct' : 'missed'];
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                feedback.remove();
+            }, 800);
+        }
+
+        // 结束测试
+        function endTest() {
+            testRunning = false;
+            clearInterval(timer);
+            clearTimeout(symbolTimer);
+            
+            // 确保处理最后一个可能错过的X
+            if (currentSymbol === 'X' && canPress) {
+                missedX++;
+            }
+            
+            // 最终计算
+            calculateFocusPercentage();
+            const accuracy = xAppearances > 0 ? (correctPresses / xAppearances * 100).toFixed(0) : 0;
+            
+            // 显示结果
+            document.getElementById('test-content').classList.add('hidden');
+            document.getElementById('test-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            document.getElementById('final-score').textContent = focusPercentage;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            
+            // 评价信息 - 确保使用当前语言
+            const t = translations[currentLang];
+            let message = '';
+            if (focusPercentage >= 80) {
+                message = t.excellent;
+            } else if (focusPercentage >= 50) {
+                message = t.good;
+            } else {
+                message = t.needPractice;
+            }
+            document.getElementById('result-message').textContent = message;
+        }
+
+        // 重置测试
+        function resetTest() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('welcome-screen').classList.remove('hidden');
+            document.getElementById('display').innerHTML = '';
+        }
+
+        // 键盘支持
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && testRunning) {
+                pressButton();
+            }
+        });
+
+        // 初始化
+        updateTexts();
+    </script>
+</body>
+</html>
