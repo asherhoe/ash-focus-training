@@ -1,179 +1,58 @@
-// ASH Focus Training App - Service Worker
-const CACHE_NAME = 'ash-focus-training-v1.0.0';
+// Service Worker for ASH Focus Training App
+const CACHE_NAME = 'ash-focus-v1';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/manifest.json',
-    // 图标文件
-    '/icon-48x48.png',
-    '/icon-72x72.png',
-    '/icon-96x96.png',
-    '/icon-128x128.png',
-    '/icon-144x144.png',
-    '/icon-152x152.png',
-    '/icon-192x192.png',
-    '/icon-384x384.png',
-    '/icon-512x512.png',
-    '/icon-512x512-maskable.png'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon-48x48.png',
+  '/icon-72x72.png',
+  '/icon-96x96.png',
+  '/icon-128x128.png',
+  '/icon-144x144.png',
+  '/icon-152x152.png',
+  '/icon-192x192.png',
+  '/icon-384x384.png',
+  '/icon-512x512.png',
+  '/icon-512x512-maskable.png'
 ];
 
-// 安装事件 - 缓存资源
-self.addEventListener('install', (event) => {
-    console.log('[SW] Installing...');
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => {
-                console.log('[SW] Caching app shell');
-                return cache.addAll(urlsToCache.map(url => new Request(url, {
-                    cache: 'reload'
-                })));
-            })
-            .catch((error) => {
-                console.error('[SW] Cache installation failed:', error);
-            })
-    );
-    // 强制激活新的 Service Worker
-    self.skipWaiting();
+// Install event - cache resources
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
 });
 
-// 激活事件 - 清理旧缓存
-self.addEventListener('activate', (event) => {
-    console.log('[SW] Activating...');
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('[SW] Deleting old cache:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
+// Fetch event - serve from cache when offline
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      })
+  );
+});
+
+// Activate event - clean up old caches
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
         })
-    );
-    // 立即控制所有页面
-    self.clients.claim();
+      );
+    })
+  );
 });
-
-// 拦截网络请求
-self.addEventListener('fetch', (event) => {
-    // 只处理 HTTP/HTTPS 请求
-    if (!event.request.url.startsWith('http')) {
-        return;
-    }
-
-    event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                // 如果缓存中有资源，返回缓存的版本
-                if (response) {
-                    console.log('[SW] Serving from cache:', event.request.url);
-                    return response;
-                }
-
-                // 如果缓存中没有，从网络获取
-                console.log('[SW] Fetching from network:', event.request.url);
-                return fetch(event.request).then((response) => {
-                    // 检查响应是否有效
-                    if (!response || response.status !== 200 || response.type !== 'basic') {
-                        return response;
-                    }
-
-                    // 克隆响应，因为响应流只能使用一次
-                    const responseToCache = response.clone();
-
-                    // 将新获取的资源添加到缓存
-                    caches.open(CACHE_NAME)
-                        .then((cache) => {
-                            cache.put(event.request, responseToCache);
-                        });
-
-                    return response;
-                }).catch((error) => {
-                    console.error('[SW] Fetch failed:', error);
-                    
-                    // 如果是导航请求且网络失败，返回离线页面
-                    if (event.request.mode === 'navigate') {
-                        return caches.match('/index.html');
-                    }
-                    
-                    throw error;
-                });
-            })
-    );
-});
-
-// 处理消息事件（用于手动更新缓存）
-self.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-        console.log('[SW] Received SKIP_WAITING message');
-        self.skipWaiting();
-    }
-    
-    if (event.data && event.data.type === 'GET_VERSION') {
-        event.ports[0].postMessage({
-            type: 'VERSION',
-            version: CACHE_NAME
-        });
-    }
-});
-
-// 后台同步（如果需要）
-self.addEventListener('sync', (event) => {
-    console.log('[SW] Background sync:', event.tag);
-    
-    if (event.tag === 'background-sync') {
-        event.waitUntil(
-            // 这里可以添加后台同步逻辑
-            Promise.resolve()
-        );
-    }
-});
-
-// 推送通知（如果需要）
-self.addEventListener('push', (event) => {
-    console.log('[SW] Push received');
-    
-    const options = {
-        body: event.data ? event.data.text() : 'ASH Focus Training 提醒',
-        icon: '/icon-192x192.png',
-        badge: '/icon-96x96.png',
-        vibrate: [100, 50, 100],
-        data: {
-            dateOfArrival: Date.now(),
-            primaryKey: 1
-        },
-        actions: [
-            {
-                action: 'explore',
-                title: '开始训练',
-                icon: '/icon-128x128.png'
-            },
-            {
-                action: 'close',
-                title: '关闭',
-                icon: '/icon-128x128.png'
-            }
-        ]
-    };
-    
-    event.waitUntil(
-        self.registration.showNotification('ASH Focus Training', options)
-    );
-});
-
-// 通知点击事件
-self.addEventListener('notificationclick', (event) => {
-    console.log('[SW] Notification click received.');
-    
-    event.notification.close();
-    
-    if (event.action === 'explore') {
-        // 打开应用
-        event.waitUntil(
-            clients.openWindow('/')
-        );
-    }
-});
-
-console.log('[SW] Service Worker loaded successfully');
