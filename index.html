@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASH Focus Training / 亚亚专注力训练</title>
+    
+    <!-- PWA 配置 -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#5a67d8">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
+    
+    <!-- 添加更多 PWA 优化的 meta 标签 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ASH Focus">
+    <meta name="description" content="专注力训练应用，通过识别X符号来提高您的专注力和反应能力">
+    <meta name="format-detection" content="telephone=no">
+    
     <style>
         * {
             margin: 0;
@@ -390,6 +403,49 @@
             0%, 100% { opacity: 0; }
             50% { opacity: 1; }
         }
+
+        /* PWA 安装提示样式 */
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .install-prompt button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .install-btn {
+            background: #5a67d8;
+            color: white;
+        }
+
+        .install-btn:hover {
+            background: #4c51bf;
+        }
+
+        .cancel-btn {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .cancel-btn:hover {
+            background: #cbd5e0;
+        }
     </style>
 </head>
 <body>
@@ -466,6 +522,13 @@
         </div>
     </div>
 
+    <!-- PWA 安装提示 -->
+    <div class="install-prompt" id="installPrompt">
+        <span id="install-text">将应用安装到主屏幕，获得更好的体验</span>
+        <button class="install-btn" onclick="installPWA()">安装</button>
+        <button class="cancel-btn" onclick="hideInstallPrompt()">取消</button>
+    </div>
+
     <script>
         // 多语言文本
         const translations = {
@@ -494,7 +557,8 @@
                 needPractice: '需要更多练习来提高专注力。',
                 correct: '正确！',
                 missed: '错过了！',
-                readyText: '准备开始...'
+                readyText: '准备开始...',
+                installText: '将应用安装到主屏幕，获得更好的体验'
             },
             en: {
                 title: 'ASH Focus Training',
@@ -521,7 +585,8 @@
                 needPractice: 'Need more practice to improve focus.',
                 correct: 'Correct!',
                 missed: 'Missed!',
-                readyText: 'Get Ready...'
+                readyText: 'Get Ready...',
+                installText: 'Install app to home screen for better experience'
             }
         };
 
@@ -542,6 +607,9 @@
         let wrongPresses = 0;
         let missedX = 0;
         let testStartTime = 0; // 添加测试开始时间记录
+
+        // PWA 相关变量
+        let deferredPrompt;
 
         // 切换语言
         function switchLanguage(lang) {
@@ -580,6 +648,7 @@
             document.getElementById('accuracy-label').textContent = t.accuracyLabel;
             document.getElementById('restart-btn').textContent = t.restartBtn;
             document.getElementById('ready-text').textContent = t.readyText;
+            document.getElementById('install-text').textContent = t.installText;
             
             // 更新时长按钮文字
             const durationBtns = document.querySelectorAll('.duration-btn');
@@ -850,8 +919,100 @@
             }
         });
 
+        // PWA 安装相关函数
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('用户接受了安装');
+                    } else {
+                        console.log('用户拒绝了安装');
+                    }
+                    deferredPrompt = null;
+                    hideInstallPrompt();
+                });
+            }
+        }
+
+        function hideInstallPrompt() {
+            document.getElementById('installPrompt').style.display = 'none';
+        }
+
+        // 检查是否从URL参数启动特定时长的测试
+        function checkURLParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const duration = urlParams.get('duration');
+            if (duration) {
+                const durationNum = parseInt(duration);
+                if ([3, 5, 10].includes(durationNum)) {
+                    selectDuration(durationNum);
+                    // 可选：自动开始测试
+                    // setTimeout(() => startTest(), 1000);
+                }
+            }
+        }
+
+        // Service Worker 注册
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker 注册成功:', registration);
+                        
+                        // 监听更新
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // 新的Service Worker已安装，提示用户刷新
+                                    if (confirm('发现新版本，是否刷新页面？')) {
+                                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.log('Service Worker 注册失败:', error);
+                    });
+            });
+        }
+
+        // PWA 安装提示
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // 阻止Chrome 67及更早版本自动显示提示
+            e.preventDefault();
+            // 保存事件以便稍后触发
+            deferredPrompt = e;
+            // 显示自定义安装提示
+            setTimeout(() => {
+                document.getElementById('installPrompt').style.display = 'flex';
+            }, 2000); // 2秒后显示
+        });
+
+        // 监听PWA安装成功
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('应用已安装');
+            hideInstallPrompt();
+        });
+
         // 初始化
         updateTexts();
+        checkURLParams();
+
+        // 检测是否在独立模式下运行（已安装的PWA）
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('应用正在独立模式下运行');
+        }
+
+        // 监听网络状态
+        window.addEventListener('online', () => {
+            console.log('网络已连接');
+        });
+
+        window.addEventListener('offline', () => {
+            console.log('网络已断开 - 应用仍可离线使用');
+        });
     </script>
-</body>
-</html>
