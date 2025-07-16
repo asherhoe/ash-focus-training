@@ -1,29 +1,119 @@
 {
   "name": "ASH Focus Training / 亚亚专注力训练",
   "short_name": "ASH Focus",
-  "description": "专注力训练应用，通过反应测试提高注意力和集中度 / Focus training app to improve attention and concentration through reaction tests",
-  "start_url": "./",
+  "description": "专注力训练应用，通过识别X符号来提高您的专注力和反应能力 / Focus training app to improve concentration and reaction time",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#5a67d8",
   "orientation": "portrait",
-  "scope": "./",
+  "scope": "/",
   "lang": "zh-CN",
-  "dir": "ltr",
-  "categories": ["health", "productivity", "education"],
   "icons": [
+    {
+      "src": "icon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "icon-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "prefer_related_applications": false
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "应用主界面 / Main interface"
+    },
+    {
+      "src": "screenshot2.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "测试进行中 / Test in progress"
+    }
+  ],
+  "categories": ["education", "health", "productivity"],
+  "shortcuts": [
+    {
+      "name": "开始3分钟测试 / Start 3-min test",
+      "short_name": "3分钟 / 3 min",
+      "description": "快速开始3分钟专注力测试 / Quick start 3-minute focus test",
+      "url": "/index.html?duration=3",
+      "icons": [
+        {
+          "src": "icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "开始5分钟测试 / Start 5-min test",
+      "short_name": "5分钟 / 5 min",
+      "description": "开始标准5分钟专注力测试 / Start standard 5-minute focus test",
+      "url": "/index.html?duration=5",
+      "icons": [
+        {
+          "src": "icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
 }
