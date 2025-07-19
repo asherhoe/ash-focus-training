@@ -2,6 +2,9 @@
   "name": "ASH Focus Training / 亚亚专注力训练",
   "short_name": "ASH Focus",
   "description": "专注力训练应用，通过识别X符号来提高您的专注力和反应能力 / Focus training app to improve concentration and reaction time",
+  "version": "1.2",
+  "version_code": 2,
+  "build_date": "2025-07-19",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#667eea",
@@ -9,6 +12,8 @@
   "orientation": "portrait",
   "scope": "/",
   "lang": "zh-CN",
+  "id": "/",
+  "dir": "auto",
   "icons": [
     {
       "src": "icon-48x48.png",
@@ -50,7 +55,7 @@
       "src": "icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "icon-384x384.png",
@@ -76,13 +81,29 @@
       "src": "screenshot1.png",
       "sizes": "1280x720",
       "type": "image/png",
-      "label": "应用主界面 / Main interface"
+      "label": "应用主界面 / Main interface",
+      "form_factor": "wide"
     },
     {
       "src": "screenshot2.png",
       "sizes": "1280x720",
       "type": "image/png",
-      "label": "测试进行中 / Test in progress"
+      "label": "测试进行中 / Test in progress",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshot-mobile1.png",
+      "sizes": "360x640",
+      "type": "image/png",
+      "label": "手机端主界面 / Mobile main interface",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshot-mobile2.png",
+      "sizes": "360x640",
+      "type": "image/png",
+      "label": "手机端测试界面 / Mobile test interface",
+      "form_factor": "narrow"
     }
   ],
   "categories": ["education", "health", "productivity"],
@@ -112,8 +133,40 @@
           "type": "image/png"
         }
       ]
+    },
+    {
+      "name": "开始10分钟测试 / Start 10-min test",
+      "short_name": "10分钟 / 10 min",
+      "description": "开始高强度10分钟专注力测试 / Start intensive 10-minute focus test",
+      "url": "/index.html?duration=10",
+      "icons": [
+        {
+          "src": "icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     }
   ],
   "prefer_related_applications": false,
-  "related_applications": []
+  "related_applications": [],
+  "iarc_rating_id": "",
+  "protocol_handlers": [],
+  "file_handlers": [],
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui", "browser"],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  }
 }
