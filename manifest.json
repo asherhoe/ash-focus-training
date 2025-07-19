@@ -55,7 +55,13 @@
       "src": "icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "icon-384x384.png",
@@ -152,7 +158,16 @@
   "related_applications": [],
   "iarc_rating_id": "",
   "protocol_handlers": [],
-  "file_handlers": [],
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "text/plain": [".txt"],
+        "application/json": [".json"]
+      }
+    }
+  ],
+  "handle_links": "preferred",
   "share_target": {
     "action": "/share",
     "method": "GET",
@@ -162,9 +177,43 @@
       "url": "url"
     }
   },
-  "edge_side_panel": {
-    "preferred_width": 400
-  },
+  "widgets": [
+    {
+      "name": "Focus Training Widget",
+      "short_name": "Focus",
+      "description": "Quick access to focus training",
+      "tag": "focus_widget",
+      "template": "focus_training_template",
+      "ms_ac_template": "adaptive_card_template",
+      "data": "/widget-data",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "widget-screenshot.png",
+          "sizes": "256x256",
+          "label": "Widget preview"
+        }
+      ],
+      "icons": [
+        {
+          "src": "icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ],
+      "auth": false,
+      "update": 86400
+    }
+  ],
+  "background_sync": [
+    {
+      "name": "sync-test-results",
+      "minInterval": 86400
+    },
+    {
+      "name": "sync-analytics",
+      "minInterval": 3600
+    }
+  ],
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui", "browser"],
   "launch_handler": {
     "client_mode": "focus-existing"
