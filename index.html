@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASH Focus Training / 亚亚专注力训练</title>
     
+    <!-- 应用版本信息 -->
+    <meta name="version" content="1.2">
+    <meta name="version-code" content="2">
+    <meta name="build-date" content="2025-07-19">
+    
     <!-- PWA 配置 -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#5a67d8">
@@ -16,6 +21,12 @@
     <meta name="apple-mobile-web-app-title" content="ASH Focus">
     <meta name="description" content="专注力训练应用，通过识别X符号来提高您的专注力和反应能力">
     <meta name="format-detection" content="telephone=no">
+    
+    <!-- Google Play Console 相关 meta 标签 -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="ASH Focus Training">
+    <meta name="msapplication-TileColor" content="#5a67d8">
+    <meta name="msapplication-config" content="/browserconfig.xml">
     
     <style>
         * {
@@ -53,6 +64,18 @@
             color: #5a67d8;
             font-weight: 700;
             letter-spacing: -0.5px;
+        }
+
+        .version-info {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            font-size: 12px;
+            color: #718096;
+            background: rgba(90, 103, 216, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            z-index: 5;
         }
 
         .language-switch {
@@ -98,6 +121,12 @@
                 margin-bottom: 20px;
             }
             
+            .version-info {
+                top: 40px;
+                left: 15px;
+                font-size: 11px;
+            }
+            
             .language-switch {
                 position: absolute;
                 top: 15px;
@@ -117,6 +146,12 @@
             
             .container {
                 padding-top: 60px;
+            }
+            
+            .version-info {
+                top: 35px;
+                left: 10px;
+                font-size: 10px;
             }
         }
 
@@ -446,10 +481,44 @@
         .cancel-btn:hover {
             background: #cbd5e0;
         }
+
+        /* 新增：更新提示样式 */
+        .update-prompt {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #5a67d8;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(90, 103, 216, 0.3);
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 1001;
+            font-size: 14px;
+        }
+
+        .update-prompt button {
+            padding: 6px 16px;
+            border: 1px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .update-prompt button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="version-info" id="version-info">v1.2 (2)</div>
+        
         <div class="language-switch">
             <button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
             <button class="lang-btn" onclick="switchLanguage('en')">English</button>
@@ -529,7 +598,19 @@
         <button class="cancel-btn" onclick="hideInstallPrompt()">取消</button>
     </div>
 
+    <!-- 应用更新提示 -->
+    <div class="update-prompt" id="updatePrompt">
+        <span id="update-text">发现新版本</span>
+        <button onclick="updateApp()">更新</button>
+        <button onclick="hideUpdatePrompt()">稍后</button>
+    </div>
+
     <script>
+        // 应用版本信息
+        const APP_VERSION = '1.2';
+        const VERSION_CODE = 2;
+        const BUILD_DATE = '2025-07-19';
+
         // 多语言文本
         const translations = {
             zh: {
@@ -558,7 +639,8 @@
                 correct: '正确！',
                 missed: '错过了！',
                 readyText: '准备开始...',
-                installText: '将应用安装到主屏幕，获得更好的体验'
+                installText: '将应用安装到主屏幕，获得更好的体验',
+                updateText: '发现新版本'
             },
             en: {
                 title: 'ASH Focus Training',
@@ -586,7 +668,8 @@
                 correct: 'Correct!',
                 missed: 'Missed!',
                 readyText: 'Get Ready...',
-                installText: 'Install app to home screen for better experience'
+                installText: 'Install app to home screen for better experience',
+                updateText: 'New version available'
             }
         };
 
@@ -610,6 +693,8 @@
 
         // PWA 相关变量
         let deferredPrompt;
+        let newWorker;
+        let refreshing = false;
 
         // 切换语言
         function switchLanguage(lang) {
@@ -649,6 +734,7 @@
             document.getElementById('restart-btn').textContent = t.restartBtn;
             document.getElementById('ready-text').textContent = t.readyText;
             document.getElementById('install-text').textContent = t.installText;
+            document.getElementById('update-text').textContent = t.updateText;
             
             // 更新时长按钮文字
             const durationBtns = document.querySelectorAll('.duration-btn');
@@ -939,6 +1025,38 @@
             document.getElementById('installPrompt').style.display = 'none';
         }
 
+        // 应用更新相关函数
+        function updateApp() {
+            if (newWorker) {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+            }
+            hideUpdatePrompt();
+        }
+
+        function hideUpdatePrompt() {
+            document.getElementById('updatePrompt').style.display = 'none';
+        }
+
+        // 检查版本更新
+        function checkForUpdates() {
+            // 检查本地存储的版本号
+            const storedVersion = localStorage.getItem('app_version');
+            const storedVersionCode = localStorage.getItem('app_version_code');
+            
+            if (storedVersion !== APP_VERSION || parseInt(storedVersionCode) !== VERSION_CODE) {
+                // 版本有更新，保存新版本信息
+                localStorage.setItem('app_version', APP_VERSION);
+                localStorage.setItem('app_version_code', VERSION_CODE.toString());
+                
+                // 如果不是首次访问，显示更新提示
+                if (storedVersion !== null) {
+                    setTimeout(() => {
+                        document.getElementById('updatePrompt').style.display = 'flex';
+                    }, 2000);
+                }
+            }
+        }
+
         // 检查是否从URL参数启动特定时长的测试
         function checkURLParams() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -962,14 +1080,11 @@
                         
                         // 监听更新
                         registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
+                            newWorker = registration.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // 新的Service Worker已安装，提示用户刷新
-                                    if (confirm('发现新版本，是否刷新页面？')) {
-                                        newWorker.postMessage({ type: 'SKIP_WAITING' });
-                                        window.location.reload();
-                                    }
+                                    // 新的Service Worker已安装，显示更新提示
+                                    document.getElementById('updatePrompt').style.display = 'flex';
                                 }
                             });
                         });
@@ -977,6 +1092,20 @@
                     .catch(error => {
                         console.log('Service Worker 注册失败:', error);
                     });
+
+                // 监听Service Worker消息
+                navigator.serviceWorker.addEventListener('message', event => {
+                    if (event.data && event.data.type === 'RELOAD_PAGE') {
+                        window.location.reload();
+                    }
+                });
+
+                // 监听controllerchange事件，自动刷新
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (refreshing) return;
+                    refreshing = true;
+                    window.location.reload();
+                });
             });
         }
 
@@ -989,7 +1118,7 @@
             // 显示自定义安装提示
             setTimeout(() => {
                 document.getElementById('installPrompt').style.display = 'flex';
-            }, 2000); // 2秒后显示
+            }, 3000); // 3秒后显示，避免与更新提示冲突
         });
 
         // 监听PWA安装成功
@@ -1001,10 +1130,13 @@
         // 初始化
         updateTexts();
         checkURLParams();
+        checkForUpdates();
 
         // 检测是否在独立模式下运行（已安装的PWA）
         if (window.matchMedia('(display-mode: standalone)').matches) {
             console.log('应用正在独立模式下运行');
+            // 在独立模式下不显示安装提示
+            document.getElementById('installPrompt').style.display = 'none';
         }
 
         // 监听网络状态
@@ -1015,4 +1147,28 @@
         window.addEventListener('offline', () => {
             console.log('网络已断开 - 应用仍可离线使用');
         });
+
+        // 版本信息显示
+        document.getElementById('version-info').textContent = `v${APP_VERSION} (${VERSION_CODE})`;
+
+        // 添加调试信息（仅在开发模式下）
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log(`ASH Focus Training v${APP_VERSION} (${VERSION_CODE}) - Build: ${BUILD_DATE}`);
+        }
+
+        // 全局错误处理
+        window.addEventListener('error', (event) => {
+            console.error('应用错误:', event.error);
+            // 可以在这里添加错误报告逻辑
+        });
+
+        // 性能监控
+        window.addEventListener('load', () => {
+            if ('performance' in window) {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                console.log('应用加载时间:', perfData.loadEventEnd - perfData.fetchStart, 'ms');
+            }
+        });
     </script>
+</body>
+</html>
