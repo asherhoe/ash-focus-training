@@ -1,388 +1,132 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASH Focus Training / 亚亚专注力训练</title>
-    
-    <!-- 应用版本信息 -->
-    <meta name="version" content="1.2">
-    <meta name="version-code" content="2">
-    <meta name="build-date" content="2025-07-19">
-    
-    <!-- PWA 配置 -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#5a67d8">
-    <link rel="apple-touch-icon" href="/icon-192x192.png">
-    
-    <!-- 添加更多 PWA 优化的 meta 标签 -->
+    <!-- Updated to release version 1.3 and version code 3 -->
+    <title>Ash Focus Training - Release 1.3</title>
+    <meta name="theme-color" content="#2196F3">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="ASH Focus">
-    <meta name="description" content="专注力训练应用，通过识别X符号来提高您的专注力和反应能力">
-    <meta name="format-detection" content="telephone=no">
-    
-    <!-- Google Play Console 相关 meta 标签 -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="ASH Focus Training">
-    <meta name="msapplication-TileColor" content="#5a67d8">
-    <meta name="msapplication-config" content="/browserconfig.xml">
-    
+    <meta name="apple-mobile-web-app-title" content="Ash Focus Training">
+    <meta name="description" content="Mental health focus training app to help patients regain concentration">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="/placeholder.svg?height=192&width=192">
+    <link rel="apple-touch-icon" href="/placeholder.svg?height=180&width=180">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
             text-align: center;
-            max-width: 600px;
-            width: 90%;
-            position: relative;
-            padding-top: 80px; /* 增加顶部内边距为语言按钮留出空间 */
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
         }
-
-        h1 {
-            font-size: 2.8em;
-            margin-bottom: 30px;
-            color: #5a67d8;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .version-info {
-            position: absolute;
-            top: 50px;
-            left: 20px;
-            font-size: 12px;
-            color: #718096;
-            background: rgba(90, 103, 216, 0.1);
-            padding: 4px 8px;
-            border-radius: 4px;
-            z-index: 5;
-        }
-
-        .language-switch {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 10; /* 确保按钮在最上层 */
-        }
-
-        .lang-btn {
-            padding: 8px 16px;
-            border: 2px solid #5a67d8;
-            background: white;
-            color: #5a67d8;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .lang-btn:hover {
-            background: #5a67d8;
-            color: white;
-        }
-
-        .lang-btn.active {
-            background: #5a67d8;
-            color: white;
-        }
-
-        /* 移动设备优化 */
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px 20px;
-                padding-top: 70px; /* 移动设备上的顶部内边距 */
-                width: 95%;
-            }
-            
-            h1 {
-                font-size: 2em; /* 减小标题字体大小 */
-                margin-bottom: 20px;
-            }
-            
-            .version-info {
-                top: 40px;
-                left: 15px;
-                font-size: 11px;
-            }
-            
-            .language-switch {
-                position: absolute;
-                top: 15px;
-                right: 15px;
-            }
-            
-            .lang-btn {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8em; /* 更小屏幕上进一步减小 */
-            }
-            
-            .container {
-                padding-top: 60px;
-            }
-            
-            .version-info {
-                top: 35px;
-                left: 10px;
-                font-size: 10px;
-            }
-        }
-
-        .display-area {
-            width: 300px;
-            height: 300px;
-            margin: 30px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 120px;
-            font-weight: bold;
-            background: #f7fafc;
-            border-radius: 20px;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 480px) {
-            .display-area {
-                width: 250px;
-                height: 250px;
-                font-size: 100px;
-            }
-        }
-
-        .symbol-o {
-            color: #48bb78;
-        }
-
-        .symbol-x {
-            color: #e53e3e;
-        }
-
-        .btn {
-            padding: 15px 40px;
-            font-size: 18px;
-            border: none;
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
             border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .version {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        
+        .info-section {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .display {
+            width: 300px;
+            height: 200px;
+            border: 3px solid #333;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            font-weight: bold;
+            background-color: #fff;
+        }
+        
+        .symbol-o {
+            color: blue;
+        }
+        
+        .symbol-x {
+            color: red;
+        }
+        
+        .controls {
+            margin: 20px 0;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 10px;
-            font-weight: 600;
+            margin: 5px;
         }
-
-        .btn-start {
-            background: #5a67d8;
-            color: white;
+        
+        button:hover {
+            background-color: #45a049;
         }
-
-        .btn-start:hover {
-            background: #4c51bf;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(90, 103, 216, 0.3);
-        }
-
-        .btn-press {
-            background: #48bb78;
-            color: white;
-            font-size: 24px;
-            padding: 20px 60px;
-        }
-
-        .btn-press:hover {
-            background: #38a169;
-        }
-
-        .btn-press:active {
-            transform: scale(0.95);
-        }
-
-        .btn-press:disabled {
-            background: #cbd5e0;
+        
+        button:disabled {
+            background-color: #cccccc;
             cursor: not-allowed;
         }
-
-        @media (max-width: 480px) {
-            .btn {
-                padding: 12px 30px;
-                font-size: 16px;
-            }
-            
-            .btn-press {
-                font-size: 20px;
-                padding: 15px 40px;
-            }
-        }
-
+        
         .stats {
-            margin: 20px 0;
             display: flex;
             justify-content: space-around;
+            margin: 20px 0;
             flex-wrap: wrap;
-            gap: 20px;
         }
-
+        
         .stat-item {
-            background: #f7fafc;
-            padding: 15px 25px;
-            border-radius: 10px;
-            min-width: 150px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 5px;
+            min-width: 120px;
         }
-
-        @media (max-width: 480px) {
-            .stat-item {
-                min-width: 120px;
-                padding: 10px 20px;
-            }
-        }
-
+        
         .stat-label {
-            font-size: 14px;
-            color: #718096;
-            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
         }
-
+        
         .stat-value {
             font-size: 24px;
+            color: #333;
+            margin-top: 5px;
+        }
+        
+        .focus-percentage {
+            font-size: 36px;
             font-weight: bold;
-            color: #2d3748;
+            color: #2196F3;
         }
-
-        @media (max-width: 480px) {
-            .stat-value {
-                font-size: 20px;
-            }
-        }
-
-        .instructions {
-            background: #edf2f7;
-            padding: 25px 30px;
-            border-radius: 15px;
-            margin: 25px 0;
-            line-height: 1.8;
-            font-size: 17px;
-            color: #2d3748;
-        }
-
-        .instructions p {
-            margin: 10px 0;
-        }
-
-        .instructions p:first-child {
-            font-size: 18px;
-            color: #5a67d8;
-            font-weight: 500;
-            margin-bottom: 15px;
-        }
-
-        .instructions strong {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        @media (max-width: 480px) {
-            .instructions {
-                padding: 20px;
-                font-size: 15px;
-            }
-            
-            .instructions p:first-child {
-                font-size: 16px;
-            }
-            
-            .instructions strong {
-                font-size: 18px;
-            }
-        }
-
-        .duration-selector {
-            margin: 30px 0;
-        }
-
-        .duration-title {
-            font-size: 18px;
-            color: #4a5568;
-            margin-bottom: 15px;
-        }
-
-        .duration-options {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .duration-btn {
-            padding: 12px 30px;
-            border: 2px solid #5a67d8;
-            background: white;
-            color: #5a67d8;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .duration-btn:hover {
-            background: #f7fafc;
-            transform: translateY(-2px);
-        }
-
-        .duration-btn.selected {
-            background: #5a67d8;
-            color: white;
-        }
-
-        @media (max-width: 480px) {
-            .duration-btn {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
-        }
-
-        .result {
-            margin-top: 30px;
-            padding: 25px;
-            background: #f0fff4;
-            border-radius: 10px;
-            border: 2px solid #48bb78;
-        }
-
-        .result h2 {
-            color: #48bb78;
-            margin-bottom: 15px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
+        
         .feedback {
             position: fixed;
             top: 50%;
@@ -393,420 +137,194 @@
             font-size: 24px;
             font-weight: bold;
             z-index: 1000;
-            animation: fadeInOut 0.8s ease;
+            display: none;
         }
-
+        
         .feedback.correct {
-            background: #48bb78;
+            background-color: #4CAF50;
             color: white;
         }
-
-        .countdown {
-            font-size: 120px;
-            font-weight: bold;
-            color: #5a67d8;
-            margin: 50px 0;
-            animation: pulse 1s ease-in-out infinite;
+        
+        .feedback.incorrect {
+            background-color: #f44336;
+            color: white;
         }
-
-        @media (max-width: 480px) {
-            .countdown {
-                font-size: 80px;
-                margin: 30px 0;
-            }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .ready-text {
-            font-size: 24px;
-            color: #4a5568;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 480px) {
-            .ready-text {
-                font-size: 20px;
-            }
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-
-        /* PWA 安装提示样式 */
-        .install-prompt {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            display: none;
-            align-items: center;
-            gap: 15px;
-            z-index: 1000;
-        }
-
-        .install-prompt button {
-            padding: 8px 20px;
-            border: none;
+        
+        .instructions {
+            text-align: left;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
             border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
         }
-
-        .install-btn {
-            background: #5a67d8;
-            color: white;
+        
+        .test-duration {
+            margin: 20px 0;
         }
-
-        .install-btn:hover {
-            background: #4c51bf;
+        
+        .test-duration label {
+            margin-right: 10px;
+            font-weight: bold;
         }
-
-        .cancel-btn {
-            background: #e2e8f0;
-            color: #4a5568;
+        
+        .test-duration select {
+            padding: 5px 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
         }
-
-        .cancel-btn:hover {
-            background: #cbd5e0;
-        }
-
-        /* 新增：更新提示样式 */
-        .update-prompt {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #5a67d8;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(90, 103, 216, 0.3);
+        
+        .results {
+            background-color: #e8f5e8;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
             display: none;
-            align-items: center;
-            gap: 15px;
-            z-index: 1001;
-            font-size: 14px;
         }
-
-        .update-prompt button {
-            padding: 6px 16px;
-            border: 1px solid white;
-            background: transparent;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
+        
+        .results h3 {
+            color: #2e7d32;
+            margin-top: 0;
         }
-
-        .update-prompt button:hover {
-            background: rgba(255, 255, 255, 0.2);
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.3s ease;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="version-info" id="version-info">v1.2 (2)</div>
+        <h1>Ash Focus Training</h1>
+        <!-- Updated version display to show Release 1.3 and Version Code 3 -->
+        <div class="version">Release 1.3 | Version Code: 3</div>
         
-        <div class="language-switch">
-            <button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
-            <button class="lang-btn" onclick="switchLanguage('en')">English</button>
+        <div class="info-section">
+            <h3>关于这个测试</h3>
+            <p>这是一个专注力训练工具，帮助改善注意力和反应能力。测试中会显示蓝色的O和红色的X，当看到红色X时请按下按钮。</p>
         </div>
-
-        <h1 id="title">亚亚专注力训练</h1>
         
-        <div id="welcome-screen">
-            <div class="instructions" id="instructions">
-                <p>这个训练可以帮助您提高专注力和反应能力。</p>
-                <p>屏幕上会随机显示字母 <span style="color: #48bb78; font-weight: bold;">O</span> 或 <span style="color: #e53e3e; font-weight: bold;">X</span></p>
-                <p>当您看到 <strong style="color: #e53e3e;">X</strong> 时，请立即按下"按键"按钮。</p>
-                <p style="margin-top: 20px; font-size: 16px; color: #718096;">💡 小贴士：保持放松，将注意力集中在屏幕中央，让反应自然而然地发生。</p>
-            </div>
-            
-            <div class="duration-selector">
-                <div class="duration-title" id="duration-title">选择测试时长</div>
-                <div class="duration-options">
-                    <button class="duration-btn" onclick="selectDuration(3)" data-duration="3">3分钟</button>
-                    <button class="duration-btn selected" onclick="selectDuration(5)" data-duration="5">5分钟</button>
-                    <button class="duration-btn" onclick="selectDuration(10)" data-duration="10">10分钟</button>
-                </div>
-            </div>
-            
-            <button class="btn btn-start" onclick="startTest()" id="start-btn">开始测试</button>
+        <div class="instructions">
+            <h3>使用说明：</h3>
+            <ul>
+                <li>测试开始后，屏幕会显示蓝色的O或红色的X</li>
+                <li>当看到<strong style="color: red;">红色的X</strong>时，请立即按下"按下"按钮</li>
+                <li>看到蓝色的O时，不要按任何按钮</li>
+                <li>每个符号显示4秒，请在此时间内做出反应</li>
+                <li>专注力百分比会根据你的表现实时更新</li>
+            </ul>
         </div>
-
-        <div id="test-screen" class="hidden">
-            <div id="countdown-screen" class="hidden">
-                <div class="ready-text" id="ready-text">准备开始...</div>
-                <div class="countdown" id="countdown">5</div>
-            </div>
-            
-            <div id="test-content" class="hidden">
-                <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-label" id="time-label">剩余时间</div>
-                    <div class="stat-value" id="timer">3:00</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label" id="score-label">专注力</div>
-                    <div class="stat-value"><span id="score">0</span>%</div>
-                </div>
-            </div>
-            
-            <div class="display-area" id="display">
-                
-            </div>
-            
-                <button class="btn btn-press" onclick="pressButton()" id="press-btn">按键 (Enter)</button>
-            </div>
+        
+        <div class="test-duration">
+            <label for="duration">测试时长:</label>
+            <select id="duration">
+                <option value="1">1分钟</option>
+                <option value="2" selected>2分钟</option>
+                <option value="3">3分钟</option>
+                <option value="5">5分钟</option>
+            </select>
         </div>
-
-        <div id="result-screen" class="hidden">
-            <div class="result">
-                <h2 id="result-title">测试完成！</h2>
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-label" id="final-score-label">专注力水平</div>
-                        <div class="stat-value"><span id="final-score">0</span>%</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label" id="accuracy-label">识别准确率</div>
-                        <div class="stat-value" id="accuracy">0%</div>
-                    </div>
-                </div>
-                <p id="result-message" style="margin-top: 20px; font-size: 18px;"></p>
-                <button class="btn btn-start" onclick="resetTest()" id="restart-btn">重新开始</button>
+        
+        <div class="display" id="display">
+            准备开始测试
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn" onclick="startTest()">开始测试</button>
+            <button id="pressBtn" onclick="pressButton()" disabled>按下 (当看到红色X时)</button>
+            <button id="stopBtn" onclick="stopTest()" disabled>停止测试</button>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">专注力</div>
+                <div class="stat-value focus-percentage" id="focusPercentage">100%</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">剩余时间</div>
+                <div class="stat-value" id="timeRemaining">--</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">X出现次数</div>
+                <div class="stat-value" id="xCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">正确按下</div>
+                <div class="stat-value" id="correctCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">错误按下</div>
+                <div class="stat-value" id="wrongCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">遗漏X</div>
+                <div class="stat-value" id="missedCount">0</div>
             </div>
         </div>
-    </div>
-
-    <!-- PWA 安装提示 -->
-    <div class="install-prompt" id="installPrompt">
-        <span id="install-text">将应用安装到主屏幕，获得更好的体验</span>
-        <button class="install-btn" onclick="installPWA()">安装</button>
-        <button class="cancel-btn" onclick="hideInstallPrompt()">取消</button>
-    </div>
-
-    <!-- 应用更新提示 -->
-    <div class="update-prompt" id="updatePrompt">
-        <span id="update-text">发现新版本</span>
-        <button onclick="updateApp()">更新</button>
-        <button onclick="hideUpdatePrompt()">稍后</button>
+        
+        <div class="results" id="results">
+            <h3>测试结果</h3>
+            <div id="finalResults"></div>
+        </div>
+        
+        <div class="feedback" id="feedback"></div>
     </div>
 
     <script>
-        // 应用版本信息
-        const APP_VERSION = '1.2';
-        const VERSION_CODE = 2;
-        const BUILD_DATE = '2025-07-19';
-
-        // 多语言文本
-        const translations = {
-            zh: {
-                title: '亚亚专注力训练',
-                instructions: `
-                    <p>这个训练可以帮助您提高专注力和反应能力。</p>
-                    <p>屏幕上会随机显示字母 <span style="color: #48bb78; font-weight: bold;">O</span> 或 <span style="color: #e53e3e; font-weight: bold;">X</span></p>
-                    <p>当您看到 <strong style="color: #e53e3e;">X</strong> 时，请立即按下"按键"按钮。</p>
-                    <p style="margin-top: 20px; font-size: 16px; color: #718096;">💡 小贴士：保持放松，将注意力集中在屏幕中央，让反应自然而然地发生。</p>
-                `,
-                durationTitle: '选择测试时长',
-                duration3: '3分钟',
-                duration5: '5分钟',
-                duration10: '10分钟',
-                startBtn: '开始测试',
-                timeLabel: '剩余时间',
-                scoreLabel: '专注力',
-                pressBtn: '按键 (Enter)',
-                resultTitle: '测试完成！',
-                finalScoreLabel: '专注力水平',
-                accuracyLabel: '识别准确率',
-                restartBtn: '重新开始',
-                excellent: '优秀！您的专注力很好！',
-                good: '不错！继续练习可以更好！',
-                needPractice: '需要更多练习来提高专注力。',
-                correct: '正确！',
-                missed: '错过了！',
-                readyText: '准备开始...',
-                installText: '将应用安装到主屏幕，获得更好的体验',
-                updateText: '发现新版本'
-            },
-            en: {
-                title: 'ASH Focus Training',
-                instructions: `
-                    <p>This training helps improve your focus and reaction time.</p>
-                    <p>Letters <span style="color: #48bb78; font-weight: bold;">O</span> or <span style="color: #e53e3e; font-weight: bold;">X</span> will appear randomly on screen.</p>
-                    <p>When you see <strong style="color: #e53e3e;">X</strong>, press the button immediately.</p>
-                    <p style="margin-top: 20px; font-size: 16px; color: #718096;">💡 Tip: Stay relaxed, focus on the center of the screen, and let your reactions flow naturally.</p>
-                `,
-                durationTitle: 'Select Duration',
-                duration3: '3 minutes',
-                duration5: '5 minutes',
-                duration10: '10 minutes',
-                startBtn: 'Start Test',
-                timeLabel: 'Time Remaining',
-                scoreLabel: 'Focus Level',
-                pressBtn: 'Press (Enter)',
-                resultTitle: 'Test Complete!',
-                finalScoreLabel: 'Focus Level',
-                accuracyLabel: 'Recognition Accuracy',
-                restartBtn: 'Start Again',
-                excellent: 'Excellent! Your focus is great!',
-                good: 'Good! Keep practicing to improve!',
-                needPractice: 'Need more practice to improve focus.',
-                correct: 'Correct!',
-                missed: 'Missed!',
-                readyText: 'Get Ready...',
-                installText: 'Install app to home screen for better experience',
-                updateText: 'New version available'
-            }
-        };
-
-        let currentLang = 'zh';
-        let testRunning = false;
-        let focusPercentage = 0;
-        let testDuration = 5; // 默认5分钟
-        let timeRemaining = 300; // 5分钟
-        let xAppearances = 0;
-        let currentSymbol = '';
-        let symbolStartTime = 0;
-        let canPress = false;
-        let timer = null;
-        let symbolTimer = null;
-        let xPositions = [];
-        let symbolIndex = 0;
-        let correctPresses = 0;
-        let wrongPresses = 0;
-        let missedX = 0;
-        let testStartTime = 0; // 添加测试开始时间记录
-
-        // PWA 相关变量
-        let deferredPrompt;
-        let newWorker;
-        let refreshing = false;
-
-        // 切换语言
-        function switchLanguage(lang) {
-            currentLang = lang;
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            updateTexts();
-        }
-
-        // 选择测试时长
-        function selectDuration(minutes) {
-            testDuration = minutes;
-            timeRemaining = minutes * 60;
-            
-            // 更新按钮状态
-            document.querySelectorAll('.duration-btn').forEach(btn => {
-                btn.classList.remove('selected');
-                if (parseInt(btn.dataset.duration) === minutes) {
-                    btn.classList.add('selected');
-                }
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
             });
         }
 
-        // 更新界面文字
-        function updateTexts() {
-            const t = translations[currentLang];
-            document.getElementById('title').textContent = t.title;
-            document.getElementById('instructions').innerHTML = t.instructions;
-            document.getElementById('duration-title').textContent = t.durationTitle;
-            document.getElementById('start-btn').textContent = t.startBtn;
-            document.getElementById('time-label').textContent = t.timeLabel;
-            document.getElementById('score-label').textContent = t.scoreLabel;
-            document.getElementById('press-btn').textContent = t.pressBtn;
-            document.getElementById('result-title').textContent = t.resultTitle;
-            document.getElementById('final-score-label').textContent = t.finalScoreLabel;
-            document.getElementById('accuracy-label').textContent = t.accuracyLabel;
-            document.getElementById('restart-btn').textContent = t.restartBtn;
-            document.getElementById('ready-text').textContent = t.readyText;
-            document.getElementById('install-text').textContent = t.installText;
-            document.getElementById('update-text').textContent = t.updateText;
-            
-            // 更新时长按钮文字
-            const durationBtns = document.querySelectorAll('.duration-btn');
-            durationBtns[0].textContent = t.duration3;
-            durationBtns[1].textContent = t.duration5;
-            durationBtns[2].textContent = t.duration10;
-        }
-
-        // 生成X出现的位置
-        function generateXPositions() {
-            xPositions = [];
-            const symbolDuration = 5; // 每个符号5秒（4秒显示 + 1秒间隔）
-            const totalSymbols = Math.floor((testDuration * 60) / symbolDuration);
-            
-            // 根据测试时长调整X的数量
-            let minX, maxX;
-            if (testDuration === 3) {
-                minX = 7; maxX = 9;   // 3分钟：7-9个X
-            } else if (testDuration === 5) {
-                minX = 12; maxX = 15; // 5分钟：12-15个X
-            } else {
-                minX = 25; maxX = 30; // 10分钟：25-30个X
-            }
-            
-            const xCount = minX + Math.floor(Math.random() * (maxX - minX + 1));
-            while (xPositions.length < xCount) {
-                const pos = Math.floor(Math.random() * totalSymbols);
-                if (!xPositions.includes(pos) && pos > 1) {
-                    xPositions.push(pos);
-                }
-            }
-            xPositions.sort((a, b) => a - b);
-        }
+        const VERSION_CODE = 3;
+        let testRunning = false;
+        let focusPercentage = 100;
+        let timeRemaining = 0;
+        let testDuration = 2; // 默认2分钟
+        let timer;
+        let symbolTimer;
+        let currentSymbol = '';
+        let canPress = false;
+        let symbolStartTime = 0;
+        let testStartTime = 0;
+        
+        // 统计数据
+        let xAppearances = 0;
+        let correctPresses = 0;
+        let wrongPresses = 0;
+        let missedX = 0;
+        let symbolIndex = 0;
+        let xPositions = [];
 
         // 开始测试
         function startTest() {
-            // 显示测试界面和倒计时
-            document.getElementById('welcome-screen').classList.add('hidden');
-            document.getElementById('test-screen').classList.remove('hidden');
-            document.getElementById('countdown-screen').classList.remove('hidden');
-            document.getElementById('test-content').classList.add('hidden');
-            document.getElementById('result-screen').classList.add('hidden');
-            
-            // 更新倒计时文字
-            const t = translations[currentLang];
-            document.getElementById('ready-text').textContent = t.readyText;
-            
-            // 开始倒计时
-            let countdown = 5;
-            document.getElementById('countdown').textContent = countdown;
-            
-            const countdownTimer = setInterval(() => {
-                countdown--;
-                if (countdown > 0) {
-                    document.getElementById('countdown').textContent = countdown;
-                } else {
-                    clearInterval(countdownTimer);
-                    // 隐藏倒计时，显示测试内容
-                    document.getElementById('countdown-screen').classList.add('hidden');
-                    document.getElementById('test-content').classList.remove('hidden');
-                    // 给用户1秒的准备时间
-                    setTimeout(() => {
-                        startActualTest();
-                    }, 1000);
-                }
-            }, 1000); // 标准1秒间隔
+            testDuration = parseInt(document.getElementById('duration').value);
+            startActualTest();
         }
-        
+
         // 开始实际测试
         function startActualTest() {
             testRunning = true;
-            focusPercentage = 0;
+            focusPercentage = 100;
             timeRemaining = testDuration * 60;
             xAppearances = 0;
             symbolIndex = 0;
@@ -822,43 +340,14 @@
             showNextSymbol();
         }
 
-        // 更新显示
-        function updateDisplay() {
-            document.getElementById('timer').textContent = formatTime(timeRemaining);
-            document.getElementById('score').textContent = focusPercentage;
-        }
-
-        // 格式化时间
-        function formatTime(seconds) {
-            const min = Math.floor(seconds / 60);
-            const sec = seconds % 60;
-            return `${min}:${sec.toString().padStart(2, '0')}`;
-        }
-
-        // 开始计时器
-        function startTimer() {
-            timer = setInterval(() => {
-                // 使用实际经过的时间来校准
-                if (testStartTime) {
-                    const actualElapsed = Math.floor((Date.now() - testStartTime) / 1000);
-                    const expectedRemaining = (testDuration * 60) - actualElapsed;
-                    
-                    // 如果偏差超过2秒，使用实际时间校准
-                    if (Math.abs(timeRemaining - expectedRemaining) > 2) {
-                        timeRemaining = expectedRemaining;
-                    } else {
-                        timeRemaining--;
-                    }
-                } else {
-                    timeRemaining--;
-                }
-                
-                updateDisplay();
-                
-                if (timeRemaining <= 0) {
-                    endTest();
-                }
-            }, 1000);
+        // 停止测试
+        function stopTest() {
+            testRunning = false;
+            clearTimeout(timer);
+            clearTimeout(symbolTimer);
+            document.getElementById('pressBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = true;
+            showResults();
         }
 
         // 显示下一个符号
@@ -886,9 +375,10 @@
             // 4秒后清除符号
             symbolTimer = setTimeout(() => {
                 if (currentSymbol === 'X' && canPress) {
-                    // 错过了X
                     missedX++;
                     showFeedback(false);
+                    calculateFocusPercentage(); // Recalculate immediately when X is missed
+                    updateDisplay(); // Update display to show decreased concentration
                 }
                 canPress = false;
                 display.innerHTML = '';
@@ -913,7 +403,6 @@
                 showFeedback(true);
                 canPress = false;
             } else {
-                // 错误按下
                 wrongPresses++;
             }
             
@@ -922,253 +411,97 @@
             updateDisplay();
         }
         
-        // 计算专注力百分比
         function calculateFocusPercentage() {
-            // 基于正确识别的X、错过的X和错误按键来计算
-            if (xAppearances === 0 && wrongPresses === 0) {
-                focusPercentage = 100;
-            } else {
-                // 正确识别X的权重最高，错误按键会扣分
-                const correctScore = correctPresses * 100;
-                const missedPenalty = missedX * 50;
-                const wrongPressPenalty = wrongPresses * 20;
-                const totalPossible = xAppearances * 100;
-                
-                if (totalPossible > 0) {
-                    focusPercentage = Math.max(0, Math.round((correctScore - missedPenalty - wrongPressPenalty) / totalPossible * 100));
-                } else {
-                    // 如果还没有X出现，但有错误按键
-                    focusPercentage = Math.max(0, 100 - (wrongPresses * 10));
+            // Start from 100% and deduct points for mistakes
+            let score = 100;
+            
+            // Deduct points for missed X's (major penalty)
+            score -= missedX * 15; // 15 points per missed X
+            
+            // Deduct points for wrong presses (moderate penalty)
+            score -= wrongPresses * 8; // 8 points per wrong press
+            
+            // Small bonus for correct presses to encourage good performance
+            if (xAppearances > 0) {
+                const correctRate = correctPresses / xAppearances;
+                if (correctRate > 0.8) {
+                    score += 5; // Small bonus for high accuracy
                 }
             }
+            
+            // Ensure score doesn't go below 0 or above 100
+            focusPercentage = Math.max(0, Math.min(100, Math.round(score)));
+        }
+
+        // 更新显示
+        function updateDisplay() {
+            document.getElementById('focusPercentage').innerText = focusPercentage + '%';
+            document.getElementById('timeRemaining').innerText = Math.floor(timeRemaining / 60) + '分钟 ' + (timeRemaining % 60) + '秒';
+            document.getElementById('xCount').innerText = xAppearances;
+            document.getElementById('correctCount').innerText = correctPresses;
+            document.getElementById('wrongCount').innerText = wrongPresses;
+            document.getElementById('missedCount').innerText = missedX;
+            updateProgressBar();
+        }
+
+        // 更新进度条
+        function updateProgressBar() {
+            const progressBar = document.querySelector('.progress-bar');
+            const progressFill = document.querySelector('.progress-fill');
+            const width = ((testDuration * 60 - timeRemaining) / (testDuration * 60)) * 100;
+            progressFill.style.width = width + '%';
         }
 
         // 显示反馈
-        function showFeedback(correct) {
-            const feedback = document.createElement('div');
-            feedback.className = 'feedback ' + (correct ? 'correct' : 'missed');
-            feedback.textContent = translations[currentLang][correct ? 'correct' : 'missed'];
-            document.body.appendChild(feedback);
-            
+        function showFeedback(isCorrect) {
+            const feedbackDiv = document.getElementById('feedback');
+            feedbackDiv.classList.remove('correct', 'incorrect');
+            feedbackDiv.classList.add(isCorrect ? 'correct' : 'incorrect');
+            feedbackDiv.innerText = isCorrect ? '正确!' : '错误!';
+            feedbackDiv.style.display = 'block';
             setTimeout(() => {
-                feedback.remove();
-            }, 800);
+                feedbackDiv.style.display = 'none';
+            }, 1000);
         }
 
-        // 结束测试
-        function endTest() {
-            testRunning = false;
-            clearInterval(timer);
-            clearTimeout(symbolTimer);
-            
-            // 确保处理最后一个可能错过的X
-            if (currentSymbol === 'X' && canPress) {
-                missedX++;
-            }
-            
-            // 最终计算
-            calculateFocusPercentage();
-            const accuracy = xAppearances > 0 ? (correctPresses / xAppearances * 100).toFixed(0) : 0;
-            
-            // 显示结果
-            document.getElementById('test-content').classList.add('hidden');
-            document.getElementById('test-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-            
-            document.getElementById('final-score').textContent = focusPercentage;
-            document.getElementById('accuracy').textContent = accuracy + '%';
-            
-            // 评价信息 - 确保使用当前语言
-            const t = translations[currentLang];
-            let message = '';
-            if (focusPercentage >= 80) {
-                message = t.excellent;
-            } else if (focusPercentage >= 50) {
-                message = t.good;
-            } else {
-                message = t.needPractice;
-            }
-            document.getElementById('result-message').textContent = message;
-        }
-
-        // 重置测试
-        function resetTest() {
-            document.getElementById('result-screen').classList.add('hidden');
-            document.getElementById('welcome-screen').classList.remove('hidden');
-            document.getElementById('display').innerHTML = '';
-        }
-
-        // 键盘支持
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && testRunning) {
-                pressButton();
-            }
-        });
-
-        // PWA 安装相关函数
-        function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('用户接受了安装');
-                    } else {
-                        console.log('用户拒绝了安装');
-                    }
-                    deferredPrompt = null;
-                    hideInstallPrompt();
-                });
-            }
-        }
-
-        function hideInstallPrompt() {
-            document.getElementById('installPrompt').style.display = 'none';
-        }
-
-        // 应用更新相关函数
-        function updateApp() {
-            if (newWorker) {
-                newWorker.postMessage({ type: 'SKIP_WAITING' });
-            }
-            hideUpdatePrompt();
-        }
-
-        function hideUpdatePrompt() {
-            document.getElementById('updatePrompt').style.display = 'none';
-        }
-
-        // 检查版本更新
-        function checkForUpdates() {
-            // 检查本地存储的版本号
-            const storedVersion = localStorage.getItem('app_version');
-            const storedVersionCode = localStorage.getItem('app_version_code');
-            
-            if (storedVersion !== APP_VERSION || parseInt(storedVersionCode) !== VERSION_CODE) {
-                // 版本有更新，保存新版本信息
-                localStorage.setItem('app_version', APP_VERSION);
-                localStorage.setItem('app_version_code', VERSION_CODE.toString());
-                
-                // 如果不是首次访问，显示更新提示
-                if (storedVersion !== null) {
-                    setTimeout(() => {
-                        document.getElementById('updatePrompt').style.display = 'flex';
-                    }, 2000);
+        // 生成X的位置
+        function generateXPositions() {
+            xPositions = [];
+            const totalSymbols = testDuration * 60 / 5; // 每5秒一个符号
+            for (let i = 0; i < totalSymbols; i++) {
+                if (Math.random() < 0.3) { // 30%的概率显示X
+                    xPositions.push(i);
                 }
             }
         }
 
-        // 检查是否从URL参数启动特定时长的测试
-        function checkURLParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const duration = urlParams.get('duration');
-            if (duration) {
-                const durationNum = parseInt(duration);
-                if ([3, 5, 10].includes(durationNum)) {
-                    selectDuration(durationNum);
-                    // 可选：自动开始测试
-                    // setTimeout(() => startTest(), 1000);
-                }
-            }
-        }
-
-        // Service Worker 注册
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('Service Worker 注册成功:', registration);
-                        
-                        // 监听更新
-                        registration.addEventListener('updatefound', () => {
-                            newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // 新的Service Worker已安装，显示更新提示
-                                    document.getElementById('updatePrompt').style.display = 'flex';
-                                }
-                            });
-                        });
-                    })
-                    .catch(error => {
-                        console.log('Service Worker 注册失败:', error);
-                    });
-
-                // 监听Service Worker消息
-                navigator.serviceWorker.addEventListener('message', event => {
-                    if (event.data && event.data.type === 'RELOAD_PAGE') {
-                        window.location.reload();
+        // 启动计时器
+        function startTimer() {
+            timer = setInterval(() => {
+                if (testRunning) {
+                    timeRemaining--;
+                    updateDisplay();
+                    if (timeRemaining <= 0) {
+                        stopTest();
                     }
-                });
-
-                // 监听controllerchange事件，自动刷新
-                navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    if (refreshing) return;
-                    refreshing = true;
-                    window.location.reload();
-                });
-            });
+                }
+            }, 1000);
         }
 
-        // PWA 安装提示
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // 阻止Chrome 67及更早版本自动显示提示
-            e.preventDefault();
-            // 保存事件以便稍后触发
-            deferredPrompt = e;
-            // 显示自定义安装提示
-            setTimeout(() => {
-                document.getElementById('installPrompt').style.display = 'flex';
-            }, 3000); // 3秒后显示，避免与更新提示冲突
-        });
-
-        // 监听PWA安装成功
-        window.addEventListener('appinstalled', (evt) => {
-            console.log('应用已安装');
-            hideInstallPrompt();
-        });
-
-        // 初始化
-        updateTexts();
-        checkURLParams();
-        checkForUpdates();
-
-        // 检测是否在独立模式下运行（已安装的PWA）
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            console.log('应用正在独立模式下运行');
-            // 在独立模式下不显示安装提示
-            document.getElementById('installPrompt').style.display = 'none';
+        // 显示测试结果
+        function showResults() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            const finalResultsDiv = document.getElementById('finalResults');
+            finalResultsDiv.innerHTML = `
+                <p>专注力百分比: <strong>${focusPercentage}%</strong></p>
+                <p>剩余时间: <strong>0分钟 0秒</strong></p>
+                <p>X出现次数: <strong>${xAppearances}</strong></p>
+                <p>正确按下: <strong>${correctPresses}</strong></p>
+                <p>错误按下: <strong>${wrongPresses}</strong></p>
+                <p>遗漏X: <strong>${missedX}</strong></p>
+            `;
         }
-
-        // 监听网络状态
-        window.addEventListener('online', () => {
-            console.log('网络已连接');
-        });
-
-        window.addEventListener('offline', () => {
-            console.log('网络已断开 - 应用仍可离线使用');
-        });
-
-        // 版本信息显示
-        document.getElementById('version-info').textContent = `v${APP_VERSION} (${VERSION_CODE})`;
-
-        // 添加调试信息（仅在开发模式下）
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            console.log(`ASH Focus Training v${APP_VERSION} (${VERSION_CODE}) - Build: ${BUILD_DATE}`);
-        }
-
-        // 全局错误处理
-        window.addEventListener('error', (event) => {
-            console.error('应用错误:', event.error);
-            // 可以在这里添加错误报告逻辑
-        });
-
-        // 性能监控
-        window.addEventListener('load', () => {
-            if ('performance' in window) {
-                const perfData = performance.getEntriesByType('navigation')[0];
-                console.log('应用加载时间:', perfData.loadEventEnd - perfData.fetchStart, 'ms');
-            }
-        });
     </script>
 </body>
 </html>
