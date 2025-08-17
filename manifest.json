@@ -1,221 +1,63 @@
 {
-  "name": "ASH Focus Training / 亚亚专注力训练",
-  "short_name": "ASH Focus",
-  "description": "专注力训练应用，通过识别X符号来提高您的专注力和反应能力 / Focus training app to improve concentration and reaction time",
-  "version": "1.2",
-  "version_code": 2,
-  "build_date": "2025-07-19",
-  "start_url": "/index.html",
+  "name": "Ash Focus Training",
+  "short_name": "Ash Focus",
+  "description": "Mental health focus training app to help patients regain concentration",
+  "version": "1.3",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#667eea",
-  "theme_color": "#5a67d8",
+  "background_color": "#f0f0f0",
+  "theme_color": "#2196F3",
   "orientation": "portrait",
-  "scope": "/",
-  "lang": "zh-CN",
-  "id": "/",
-  "dir": "auto",
+  "categories": ["health", "medical", "productivity"],
+  "lang": "en",
   "icons": [
     {
-      "src": "icon-48x48.png",
-      "sizes": "48x48",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-72x72.png",
+      "src": "/placeholder.svg?height=72&width=72",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-96x96.png",
+      "src": "/placeholder.svg?height=96&width=96",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-128x128.png",
+      "src": "/placeholder.svg?height=128&width=128",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-144x144.png",
+      "src": "/placeholder.svg?height=144&width=144",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-152x152.png",
+      "src": "/placeholder.svg?height=152&width=152",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-192x192.png",
+      "src": "/placeholder.svg?height=192&width=192",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-192x192-maskable.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icon-384x384.png",
+      "src": "/placeholder.svg?height=384&width=384",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512x512.png",
+      "src": "/placeholder.svg?height=512&width=512",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512x512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
-  ],
-  "screenshots": [
-    {
-      "src": "screenshot1.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "label": "应用主界面 / Main interface",
-      "form_factor": "wide"
-    },
-    {
-      "src": "screenshot2.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "label": "测试进行中 / Test in progress",
-      "form_factor": "wide"
-    },
-    {
-      "src": "screenshot-mobile1.png",
-      "sizes": "360x640",
-      "type": "image/png",
-      "label": "手机端主界面 / Mobile main interface",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "screenshot-mobile2.png",
-      "sizes": "360x640",
-      "type": "image/png",
-      "label": "手机端测试界面 / Mobile test interface",
-      "form_factor": "narrow"
-    }
-  ],
-  "categories": ["education", "health", "productivity"],
-  "shortcuts": [
-    {
-      "name": "开始3分钟测试 / Start 3-min test",
-      "short_name": "3分钟 / 3 min",
-      "description": "快速开始3分钟专注力测试 / Quick start 3-minute focus test",
-      "url": "/index.html?duration=3",
-      "icons": [
-        {
-          "src": "icon-96x96.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "开始5分钟测试 / Start 5-min test",
-      "short_name": "5分钟 / 5 min",
-      "description": "开始标准5分钟专注力测试 / Start standard 5-minute focus test",
-      "url": "/index.html?duration=5",
-      "icons": [
-        {
-          "src": "icon-96x96.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "开始10分钟测试 / Start 10-min test",
-      "short_name": "10分钟 / 10 min",
-      "description": "开始高强度10分钟专注力测试 / Start intensive 10-minute focus test",
-      "url": "/index.html?duration=10",
-      "icons": [
-        {
-          "src": "icon-96x96.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    }
-  ],
-  "prefer_related_applications": false,
-  "related_applications": [],
-  "iarc_rating_id": "",
-  "protocol_handlers": [],
-  "file_handlers": [
-    {
-      "action": "/",
-      "accept": {
-        "text/plain": [".txt"],
-        "application/json": [".json"]
-      }
-    }
-  ],
-  "handle_links": "preferred",
-  "share_target": {
-    "action": "/share",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  },
-  "widgets": [
-    {
-      "name": "Focus Training Widget",
-      "short_name": "Focus",
-      "description": "Quick access to focus training",
-      "tag": "focus_widget",
-      "template": "focus_training_template",
-      "ms_ac_template": "adaptive_card_template",
-      "data": "/widget-data",
-      "type": "application/json",
-      "screenshots": [
-        {
-          "src": "widget-screenshot.png",
-          "sizes": "256x256",
-          "label": "Widget preview"
-        }
-      ],
-      "icons": [
-        {
-          "src": "icon-96x96.png",
-          "sizes": "96x96"
-        }
-      ],
-      "auth": false,
-      "update": 86400
-    }
-  ],
-  "background_sync": [
-    {
-      "name": "sync-test-results",
-      "minInterval": 86400
-    },
-    {
-      "name": "sync-analytics",
-      "minInterval": 3600
-    }
-  ],
-  "display_override": ["window-controls-overlay", "standalone", "minimal-ui", "browser"],
-  "launch_handler": {
-    "client_mode": "focus-existing"
-  }
+  ]
 }
