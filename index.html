@@ -86,45 +86,38 @@
             margin: 5px;
         }
         
+        #pressBtn {
+            padding: 25px 50px;
+            font-size: 24px;
+            font-weight: bold;
+            min-width: 300px;
+            min-height: 80px;
+        }
+        
         button:hover {
             background-color: #45a049;
         }
-        
+
         button:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
         }
         
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        
-        .stat-item {
-            background-color: #f9f9f9;
-            padding: 15px;
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
             border-radius: 5px;
-            margin: 5px;
-            min-width: 120px;
+            cursor: pointer;
         }
         
-        .stat-label {
-            font-weight: bold;
-            color: #555;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            color: #333;
-            margin-top: 5px;
-        }
-        
-        .focus-percentage {
-            font-size: 36px;
-            font-weight: bold;
-            color: #2196F3;
+        .language-toggle:hover {
+            background-color: #1976D2;
         }
         
         .feedback {
@@ -206,76 +199,78 @@
     </style>
 </head>
 <body>
+    <button class="language-toggle" onclick="toggleLanguage()" id="langToggle">English</button>
+    
     <div class="container">
-        <h1>Ash Focus Training</h1>
+        <h1 id="title">Ash Focus Training</h1>
         <!-- Updated version display to show Release 1.3 and Version Code 3 -->
         <div class="version">Release 1.3 | Version Code: 3</div>
         
         <div class="info-section">
-            <h3>关于这个测试</h3>
-            <p>这是一个专注力训练工具，帮助改善注意力和反应能力。测试中会显示蓝色的O和红色的X，当看到红色X时请按下按钮。</p>
+            <h3 id="aboutTitle">关于这个测试</h3>
+            <p id="aboutText">这是一个专注力训练工具，帮助改善注意力和反应能力。测试中会显示蓝色的O和红色的X，当看到红色X时请按下按钮。</p>
         </div>
         
         <div class="instructions">
-            <h3>使用说明：</h3>
-            <ul>
-                <li>测试开始后，屏幕会显示蓝色的O或红色的X</li>
-                <li>当看到<strong style="color: red;">红色的X</strong>时，请立即按下"按下"按钮</li>
-                <li>看到蓝色的O时，不要按任何按钮</li>
-                <li>每个符号显示4秒，请在此时间内做出反应</li>
-                <li>专注力百分比会根据你的表现实时更新</li>
+            <h3 id="instructionsTitle">使用说明：</h3>
+            <ul id="instructionsList">
+                <li id="inst1">测试开始后，屏幕会显示蓝色的O或红色的X</li>
+                <li id="inst2">当看到<strong style="color: red;">红色的X</strong>时，请立即按下"按下"按钮</li>
+                <li id="inst3">看到蓝色的O时，不要按任何按钮</li>
+                <li id="inst4">每个符号显示4秒，请在此时间内做出反应</li>
+                <li id="inst5">专注力百分比会根据你的表现实时更新</li>
             </ul>
         </div>
         
         <div class="test-duration">
-            <label for="duration">测试时长:</label>
+            <label for="duration" id="durationLabel">测试时长:</label>
             <select id="duration">
-                <option value="1">1分钟</option>
-                <option value="2" selected>2分钟</option>
-                <option value="3">3分钟</option>
-                <option value="5">5分钟</option>
+                <option value="1" id="duration1">1分钟</option>
+                <option value="2" selected id="duration2">2分钟</option>
+                <option value="3" id="duration3">3分钟</option>
+                <option value="5" id="duration5">5分钟</option>
             </select>
         </div>
         
         <div class="display" id="display">
-            准备开始测试
+            <span id="readyText">准备开始测试</span>
         </div>
         
         <div class="controls">
-            <button id="startBtn" onclick="startTest()">开始测试</button>
-            <button id="pressBtn" onclick="pressButton()" disabled>按下 (当看到红色X时)</button>
-            <button id="stopBtn" onclick="stopTest()" disabled>停止测试</button>
+            <button id="startBtn" onclick="startTest()"><span id="startBtnText">开始测试</span></button>
+            <button id="pressBtn" onclick="pressButton()" disabled><span id="pressBtnText">按下 (当看到红色X时)</span></button>
+            <button id="stopBtn" onclick="stopTest()" disabled><span id="stopBtnText">停止测试</span></button>
         </div>
         
         <div class="stats">
             <div class="stat-item">
-                <div class="stat-label">专注力</div>
+                <div class="stat-label" id="focusLabel">专注力</div>
                 <div class="stat-value focus-percentage" id="focusPercentage">100%</div>
             </div>
             <div class="stat-item">
-                <div class="stat-label">剩余时间</div>
+                <div class="stat-label" id="timeLabel">剩余时间</div>
                 <div class="stat-value" id="timeRemaining">--</div>
             </div>
             <div class="stat-item">
-                <div class="stat-label">X出现次数</div>
+                <div class="stat-label" id="xCountLabel">X出现次数</div>
                 <div class="stat-value" id="xCount">0</div>
             </div>
             <div class="stat-item">
-                <div class="stat-label">正确按下</div>
+                <div class="stat-label" id="correctLabel">正确按下</div>
                 <div class="stat-value" id="correctCount">0</div>
             </div>
             <div class="stat-item">
-                <div class="stat-label">错误按下</div>
+                <div class="stat-label" id="wrongLabel">错误按下</div>
                 <div class="stat-value" id="wrongCount">0</div>
             </div>
             <div class="stat-item">
-                <div class="stat-label">遗漏X</div>
+                <div class="stat-label" id="missedLabel">遗漏X</div>
                 <div class="stat-value" id="missedCount">0</div>
             </div>
         </div>
         
         <div class="results" id="results">
-            <h3>测试结果</h3>
+            <h3 id="resultsTitle">测试结果</h3>
             <div id="finalResults"></div>
         </div>
         
@@ -314,15 +309,128 @@
         let missedX = 0;
         let symbolIndex = 0;
         let xPositions = [];
+        
+        let currentLanguage = 'zh'; // 默认中文
+        
+        const translations = {
+            zh: {
+                title: 'Ash Focus Training',
+                langToggle: 'English',
+                aboutTitle: '关于这个测试',
+                aboutText: '这是一个专注力训练工具，帮助改善注意力和反应能力。测试中会显示蓝色的O和红色的X，当看到红色X时请按下按钮。',
+                instructionsTitle: '使用说明：',
+                inst1: '测试开始后，屏幕会显示蓝色的O或红色的X',
+                inst2: '当看到红色的X时，请立即按下"按下"按钮',
+                inst3: '看到蓝色的O时，不要按任何按钮',
+                inst4: '每个符号显示4秒，请在此时间内做出反应',
+                inst5: '专注力百分比会根据你的表现实时更新',
+                durationLabel: '测试时长:',
+                duration1: '1分钟',
+                duration2: '2分钟',
+                duration3: '3分钟',
+                duration5: '5分钟',
+                readyText: '准备开始测试',
+                startBtnText: '开始测试',
+                pressBtnText: '按下 (当看到红色X时)',
+                stopBtnText: '停止测试',
+                focusLabel: '专注力',
+                timeLabel: '剩余时间',
+                xCountLabel: 'X出现次数',
+                correctLabel: '正确按下',
+                wrongLabel: '错误按下',
+                missedLabel: '遗漏X',
+                resultsTitle: '测试结果',
+                correctFeedback: '正确!',
+                incorrectFeedback: '错误!',
+                minutes: '分钟',
+                seconds: '秒'
+            },
+            en: {
+                title: 'Ash Focus Training',
+                langToggle: '中文',
+                aboutTitle: 'About This Test',
+                aboutText: 'This is a focus training tool to help improve attention and reaction ability. The test will display blue Os and red Xs, press the button when you see a red X.',
+                instructionsTitle: 'Instructions:',
+                inst1: 'After the test starts, the screen will display blue Os or red Xs',
+                inst2: 'When you see a red X, immediately press the "Press" button',
+                inst3: 'When you see blue Os, do not press any button',
+                inst4: 'Each symbol is displayed for 4 seconds, please react within this time',
+                inst5: 'Focus percentage will update in real-time based on your performance',
+                durationLabel: 'Test Duration:',
+                duration1: '1 minute',
+                duration2: '2 minutes',
+                duration3: '3 minutes',
+                duration5: '5 minutes',
+                readyText: 'Ready to start test',
+                startBtnText: 'Start Test',
+                pressBtnText: 'Press (when you see red X)',
+                stopBtnText: 'Stop Test',
+                focusLabel: 'Focus',
+                timeLabel: 'Time Remaining',
+                xCountLabel: 'X Appearances',
+                correctLabel: 'Correct Presses',
+                wrongLabel: 'Wrong Presses',
+                missedLabel: 'Missed X',
+                resultsTitle: 'Test Results',
+                correctFeedback: 'Correct!',
+                incorrectFeedback: 'Wrong!',
+                minutes: 'minutes',
+                seconds: 'seconds'
+            }
+        };
+        
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'zh' ? 'en' : 'zh';
+            updateLanguage();
+        }
+        
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            
+            document.getElementById('langToggle').textContent = t.langToggle;
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('aboutTitle').textContent = t.aboutTitle;
+            document.getElementById('aboutText').textContent = t.aboutText;
+            document.getElementById('instructionsTitle').textContent = t.instructionsTitle;
+            document.getElementById('inst1').innerHTML = t.inst1;
+            document.getElementById('inst2').innerHTML = t.inst2;
+            document.getElementById('inst3').innerHTML = t.inst3;
+            document.getElementById('inst4').innerHTML = t.inst4;
+            document.getElementById('inst5').innerHTML = t.inst5;
+            document.getElementById('durationLabel').textContent = t.durationLabel;
+            document.getElementById('duration1').textContent = t.duration1;
+            document.getElementById('duration2').textContent = t.duration2;
+            document.getElementById('duration3').textContent = t.duration3;
+            document.getElementById('duration5').textContent = t.duration5;
+            document.getElementById('readyText').textContent = t.readyText;
+            document.getElementById('startBtnText').textContent = t.startBtnText;
+            document.getElementById('pressBtnText').textContent = t.pressBtnText;
+            document.getElementById('stopBtnText').textContent = t.stopBtnText;
+            document.getElementById('focusLabel').textContent = t.focusLabel;
+            document.getElementById('timeLabel').textContent = t.timeLabel;
+            document.getElementById('xCountLabel').textContent = t.xCountLabel;
+            document.getElementById('correctLabel').textContent = t.correctLabel;
+            document.getElementById('wrongLabel').textContent = t.wrongLabel;
+            document.getElementById('missedLabel').textContent = t.missedLabel;
+            document.getElementById('resultsTitle').textContent = t.resultsTitle;
+        }
 
         // 开始测试
         function startTest() {
+            console.log("[v0] Start test button clicked");
             testDuration = parseInt(document.getElementById('duration').value);
+            
+            // 启用和禁用相应按钮
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('pressBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = false;
+            
             startActualTest();
         }
 
         // 开始实际测试
         function startActualTest() {
+            console.log("[v0] Starting actual test");
             testRunning = true;
             focusPercentage = 100;
             timeRemaining = testDuration * 60;
@@ -331,7 +439,7 @@
             correctPresses = 0;
             wrongPresses = 0;
             missedX = 0;
-            testStartTime = Date.now(); // 记录开始时间
+            testStartTime = Date.now();
             
             generateXPositions();
             
@@ -345,6 +453,7 @@
             testRunning = false;
             clearTimeout(timer);
             clearTimeout(symbolTimer);
+            document.getElementById('startBtn').disabled = false;
             document.getElementById('pressBtn').disabled = true;
             document.getElementById('stopBtn').disabled = true;
             showResults();
@@ -355,6 +464,8 @@
             if (!testRunning || timeRemaining <= 0) {
                 return;
             }
+            
+            console.log("[v0] Showing symbol at index:", symbolIndex);
             
             // 确定显示O还是X
             const isX = xPositions.includes(symbolIndex);
@@ -377,8 +488,8 @@
                 if (currentSymbol === 'X' && canPress) {
                     missedX++;
                     showFeedback(false);
-                    calculateFocusPercentage(); // Recalculate immediately when X is missed
-                    updateDisplay(); // Update display to show decreased concentration
+                    calculateFocusPercentage();
+                    updateDisplay();
                 }
                 canPress = false;
                 display.innerHTML = '';
@@ -404,6 +515,7 @@
                 canPress = false;
             } else {
                 wrongPresses++;
+                showFeedback(false);
             }
             
             // 计算专注力百分比
@@ -435,8 +547,9 @@
 
         // 更新显示
         function updateDisplay() {
+            const t = translations[currentLanguage];
             document.getElementById('focusPercentage').innerText = focusPercentage + '%';
-            document.getElementById('timeRemaining').innerText = Math.floor(timeRemaining / 60) + '分钟 ' + (timeRemaining % 60) + '秒';
+            document.getElementById('timeRemaining').innerText = Math.floor(timeRemaining / 60) + t.minutes + ' ' + (timeRemaining % 60) + t.seconds;
             document.getElementById('xCount').innerText = xAppearances;
             document.getElementById('correctCount').innerText = correctPresses;
             document.getElementById('wrongCount').innerText = wrongPresses;
@@ -448,16 +561,19 @@
         function updateProgressBar() {
             const progressBar = document.querySelector('.progress-bar');
             const progressFill = document.querySelector('.progress-fill');
-            const width = ((testDuration * 60 - timeRemaining) / (testDuration * 60)) * 100;
-            progressFill.style.width = width + '%';
+            if (progressFill) {
+                const width = ((testDuration * 60 - timeRemaining) / (testDuration * 60)) * 100;
+                progressFill.style.width = width + '%';
+            }
         }
 
         // 显示反馈
         function showFeedback(isCorrect) {
+            const t = translations[currentLanguage];
             const feedbackDiv = document.getElementById('feedback');
             feedbackDiv.classList.remove('correct', 'incorrect');
             feedbackDiv.classList.add(isCorrect ? 'correct' : 'incorrect');
-            feedbackDiv.innerText = isCorrect ? '正确!' : '错误!';
+            feedbackDiv.innerText = isCorrect ? t.correctFeedback : t.incorrectFeedback;
             feedbackDiv.style.display = 'block';
             setTimeout(() => {
                 feedbackDiv.style.display = 'none';
@@ -473,6 +589,7 @@
                     xPositions.push(i);
                 }
             }
+            console.log("[v0] Generated X positions:", xPositions);
         }
 
         // 启动计时器
@@ -490,16 +607,17 @@
 
         // 显示测试结果
         function showResults() {
+            const t = translations[currentLanguage];
             const resultsDiv = document.getElementById('results');
             resultsDiv.style.display = 'block';
             const finalResultsDiv = document.getElementById('finalResults');
             finalResultsDiv.innerHTML = `
-                <p>专注力百分比: <strong>${focusPercentage}%</strong></p>
-                <p>剩余时间: <strong>0分钟 0秒</strong></p>
-                <p>X出现次数: <strong>${xAppearances}</strong></p>
-                <p>正确按下: <strong>${correctPresses}</strong></p>
-                <p>错误按下: <strong>${wrongPresses}</strong></p>
-                <p>遗漏X: <strong>${missedX}</strong></p>
+                <p>${t.focusLabel}: <strong>${focusPercentage}%</strong></p>
+                <p>${t.timeLabel}: <strong>0${t.minutes} 0${t.seconds}</strong></p>
+                <p>${t.xCountLabel}: <strong>${xAppearances}</strong></p>
+                <p>${t.correctLabel}: <strong>${correctPresses}</strong></p>
+                <p>${t.wrongLabel}: <strong>${wrongPresses}</strong></p>
+                <p>${t.missedLabel}: <strong>${missedX}</strong></p>
             `;
         }
     </script>
